@@ -27,15 +27,4 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(authRequest.getUsername(), authRequest.getPassword()));
     }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
-//        if (token.startsWith("Bearer ")) {
-//            token = token.substring(7); // Remove "Bearer " prefix
-//        }
-//
-//        tokenBlacklistService.blacklistToken(token); // Add token to blacklist
-//
-//        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
-//    }
-
 }
