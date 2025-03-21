@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/api")
 public class AdminController {
 
     private final AdminService adminService;
