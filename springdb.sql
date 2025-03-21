@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 17, 2025 at 07:54 PM
+-- Generation Time: Mar 21, 2025 at 02:19 PM
 -- Server version: 5.6.51
 -- PHP Version: 8.2.20
 
@@ -24,211 +24,595 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `functions_bk`
+-- Table structure for table `customers`
 --
 
-CREATE TABLE `functions_bk` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL,
+  `ADDRESS` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `NAME` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NAME_TEXT` text COLLATE utf8mb4_unicode_ci,
+  `PHONE` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `GROUP_ID` int(11) DEFAULT NULL,
+  `BUYDATE` date DEFAULT NULL,
+  `EMAIL` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `GENDER` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `BIRTHDAY` date DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permissions`
+-- Table structure for table `customers_groups`
 --
 
-CREATE TABLE `permissions` (
-  `id` bigint(20) NOT NULL,
-  `function_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) NOT NULL
+CREATE TABLE `customers_groups` (
+  `id` int(11) NOT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `NAME` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permission_user`
+-- Table structure for table `group_prices`
 --
 
-CREATE TABLE `permission_user` (
-  `id` bigint(20) NOT NULL,
-  `function_id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL
+CREATE TABLE `group_prices` (
+  `id` int(11) NOT NULL,
+  `GROUP_ID` int(11) DEFAULT NULL,
+  `PRICE_ID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Table structure for table `price`
 --
 
-CREATE TABLE `roles` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+CREATE TABLE `price` (
+  `id` int(11) NOT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `END_DATE` date DEFAULT NULL,
+  `IS_DEFAULT` tinyint(1) DEFAULT NULL,
+  `NAME` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NAME_TEXT` text COLLATE utf8mb4_unicode_ci,
+  `START_DATE` date DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `PRICE_CATEGORY_ID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `roles`
---
-
-INSERT INTO `roles` (`id`, `name`, `description`) VALUES
-(1, 'ADMIN', NULL),
-(2, 'USER', NULL),
-(3, 'CUSTOMER', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `prices_categories`
 --
 
-CREATE TABLE `users` (
-  `id` bigint(20) NOT NULL,
-  `created_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `display_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `display_name_text` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `username` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+CREATE TABLE `prices_categories` (
+  `id` int(11) NOT NULL,
+  `NAME` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `created_time`, `updated_time`, `display_name`, `display_name_text`, `password`, `username`) VALUES
-(17, '2025-03-17 13:34:34', '2025-03-17 14:09:54', 'John Doe', 'JD', '$2a$10$4yJPKmdpUafWgqYyxNX5kuW2U4Iw6gCPH0vFDLmx5xo3NcpVUu51e', 'usertest'),
-(19, '2025-03-17 14:20:47', '2025-03-17 14:20:47', 'Jackie Chan', 'JC', '$2a$10$aZA6hIAW5.vEYuvU44uUsuY2ncD.VdPCJWzXQgUX16UF3NCyPOw6u', 'useradmin'),
-(23, '2025-03-17 14:40:06', '2025-03-17 14:40:06', 'Test Create', 'TC', '$2a$10$88FOH0JdpTDAgp5ba0lS9OIk9GXM2ojR2XXr1DBSby3Xo9V2T4rUy', 'usertest22');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_roles`
+-- Table structure for table `products`
 --
 
-CREATE TABLE `user_roles` (
-  `user_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) NOT NULL
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `CREATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
+  `NAME` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NAME_TEXT` text COLLATE utf8mb4_unicode_ci,
+  `UPDATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `PRODUCT_CATEGORY_ID` int(11) DEFAULT NULL,
+  `PRODUCT_UNIT_ID` int(11) DEFAULT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `PERCENT_DEFAULT_WHOLE_SELL` decimal(5,2) DEFAULT NULL,
+  `PERCENT_DEFAULT_RETAIL_SELL` decimal(5,2) DEFAULT NULL,
+  `MONEY_DEFAULT_WHOLE_SELL` decimal(10,2) DEFAULT NULL,
+  `MONEY_DEFAULT_RETAIL_SELL` decimal(10,2) DEFAULT NULL,
+  `MIN_QUANTITY` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `user_roles`
+-- Table structure for table `products_buyprice_details`
 --
 
-INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
-(17, 1),
-(19, 1),
-(19, 2),
-(23, 2);
+CREATE TABLE `products_buyprice_details` (
+  `id` int(11) NOT NULL,
+  `PRODUCT_ID` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `PRICES` decimal(10,2) DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `STOCK_DIARY_DETAILS_ID` int(11) DEFAULT NULL,
+  `WAREHOUSES_ID` int(11) DEFAULT NULL,
+  `REF_ID` int(11) DEFAULT NULL,
+  `TYPE` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `EXPIRED_DATE` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products_categories`
+--
+
+CREATE TABLE `products_categories` (
+  `id` int(11) NOT NULL,
+  `CREATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
+  `NAME` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `BRANCH_ID` int(11) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products_prices`
+--
+
+CREATE TABLE `products_prices` (
+  `id` int(11) NOT NULL,
+  `IN_USED` tinyint(1) DEFAULT NULL,
+  `PRICE_VN` decimal(10,2) DEFAULT NULL,
+  `PRICE_ID` int(11) DEFAULT NULL,
+  `PRODUCT_ID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_units`
+--
+
+CREATE TABLE `product_units` (
+  `id` int(11) NOT NULL,
+  `NAME` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `BRANCH_ID` int(11) DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
+  `IS_DELETED` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `provider`
+--
+
+CREATE TABLE `provider` (
+  `id` int(11) NOT NULL,
+  `NAME` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NAME_TEXT` text COLLATE utf8mb4_unicode_ci,
+  `ADDRESS` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PHONE` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `PROVIDER_GROUP_ID` int(11) DEFAULT NULL,
+  `BIRTHDAY` date DEFAULT NULL,
+  `EMAIL` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `UPDATED_TIME` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `providers_groups`
+--
+
+CREATE TABLE `providers_groups` (
+  `id` int(11) NOT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `NAME` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stocks`
+--
+
+CREATE TABLE `stocks` (
+  `id` int(11) NOT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `PRODUCT_ID` int(11) DEFAULT NULL,
+  `WAREHOUSE_ID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stock_diary`
+--
+
+CREATE TABLE `stock_diary` (
+  `id` int(11) NOT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `TYPE` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CUSTOMER_ID` int(11) DEFAULT NULL,
+  `USER_ID` int(11) DEFAULT NULL,
+  `WAREHOUSE_ID` int(11) DEFAULT NULL,
+  `BUY_DATE` date DEFAULT NULL,
+  `USERSALE_ID` int(11) DEFAULT NULL,
+  `STATUS` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stock_diary_details`
+--
+
+CREATE TABLE `stock_diary_details` (
+  `id` int(11) NOT NULL,
+  `BUY_PRICE` decimal(10,2) DEFAULT NULL,
+  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `quantity` int(11) DEFAULT NULL,
+  `SELL_PRICE` decimal(10,2) DEFAULT NULL,
+  `DEFAULT_SELL_PRICE` decimal(10,2) DEFAULT NULL,
+  `PRODUCT_ID` int(11) DEFAULT NULL,
+  `STOCK_DIARY_ID` int(11) DEFAULT NULL,
+  `PRODUCT_TYPE` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ORDER_NUMBER` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IN_OUT_TYPE` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DISCOUNT_CASH_BILL` decimal(10,2) DEFAULT NULL,
+  `EXPIRED_DATE` date DEFAULT NULL,
+  `WHOLE_SELL_PRICE` decimal(10,2) DEFAULT NULL,
+  `DEFAULT_BUY_PRICE` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transaction`
+--
+
+CREATE TABLE `transaction` (
+  `id` int(11) NOT NULL,
+  `DISCOUNT_BILL` decimal(10,2) DEFAULT NULL,
+  `REAL_AMOUNT` decimal(10,2) DEFAULT NULL,
+  `TOTAL_AMOUNT` decimal(10,2) DEFAULT NULL,
+  `TOTAL_DISCOUNT_PRODUCTS` decimal(10,2) DEFAULT NULL,
+  `STOCK_DIARY_ID` int(11) DEFAULT NULL,
+  `DISCOUNT_CASH` decimal(10,2) DEFAULT NULL,
+  `DISCOUNT_PERCENT` decimal(5,2) DEFAULT NULL,
+  `ORDER_AMOUNT` decimal(10,2) DEFAULT NULL,
+  `DIRECT_AMOUNT` decimal(10,2) DEFAULT NULL,
+  `DISCOUNT_REWARD` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `warehouse`
+--
+
+CREATE TABLE `warehouse` (
+  `id` int(11) NOT NULL,
+  `ADDRESS` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `IN_USED` tinyint(1) DEFAULT NULL,
+  `NAME` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PHONE` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `functions_bk`
+-- Indexes for table `customers`
 --
-ALTER TABLE `functions_bk`
+ALTER TABLE `customers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD KEY `GROUP_ID` (`GROUP_ID`);
 
 --
--- Indexes for table `permissions`
+-- Indexes for table `customers_groups`
 --
-ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `function_id` (`function_id`),
-  ADD KEY `role_id` (`role_id`);
+ALTER TABLE `customers_groups`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `permission_user`
+-- Indexes for table `group_prices`
 --
-ALTER TABLE `permission_user`
+ALTER TABLE `group_prices`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `function_id` (`function_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `PRICE_ID` (`PRICE_ID`),
+  ADD KEY `GROUP_ID` (`GROUP_ID`);
 
 --
--- Indexes for table `roles`
+-- Indexes for table `price`
 --
-ALTER TABLE `roles`
+ALTER TABLE `price`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD KEY `PRICE_CATEGORY_ID` (`PRICE_CATEGORY_ID`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `prices_categories`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
+ALTER TABLE `prices_categories`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_roles`
+-- Indexes for table `products`
 --
-ALTER TABLE `user_roles`
-  ADD PRIMARY KEY (`user_id`,`role_id`),
-  ADD KEY `role_id` (`role_id`);
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `PRODUCT_CATEGORY_ID` (`PRODUCT_CATEGORY_ID`),
+  ADD KEY `PRODUCT_UNIT_ID` (`PRODUCT_UNIT_ID`);
+
+--
+-- Indexes for table `products_buyprice_details`
+--
+ALTER TABLE `products_buyprice_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `STOCK_DIARY_DETAILS_ID` (`STOCK_DIARY_DETAILS_ID`),
+  ADD KEY `WAREHOUSES_ID` (`WAREHOUSES_ID`),
+  ADD KEY `PRODUCT_ID` (`PRODUCT_ID`);
+
+--
+-- Indexes for table `products_categories`
+--
+ALTER TABLE `products_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `products_prices`
+--
+ALTER TABLE `products_prices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `PRICE_ID` (`PRICE_ID`),
+  ADD KEY `PRODUCT_ID` (`PRODUCT_ID`);
+
+--
+-- Indexes for table `product_units`
+--
+ALTER TABLE `product_units`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `provider`
+--
+ALTER TABLE `provider`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `PROVIDER_GROUP_ID` (`PROVIDER_GROUP_ID`);
+
+--
+-- Indexes for table `providers_groups`
+--
+ALTER TABLE `providers_groups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stocks`
+--
+ALTER TABLE `stocks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `WAREHOUSE_ID` (`WAREHOUSE_ID`),
+  ADD KEY `PRODUCT_ID` (`PRODUCT_ID`);
+
+--
+-- Indexes for table `stock_diary`
+--
+ALTER TABLE `stock_diary`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `WAREHOUSE_ID` (`WAREHOUSE_ID`);
+
+--
+-- Indexes for table `stock_diary_details`
+--
+ALTER TABLE `stock_diary_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `STOCK_DIARY_ID` (`STOCK_DIARY_ID`),
+  ADD KEY `PRODUCT_ID` (`PRODUCT_ID`);
+
+--
+-- Indexes for table `transaction`
+--
+ALTER TABLE `transaction`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `STOCK_DIARY_ID` (`STOCK_DIARY_ID`);
+
+--
+-- Indexes for table `warehouse`
+--
+ALTER TABLE `warehouse`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `functions_bk`
+-- AUTO_INCREMENT for table `customers`
 --
-ALTER TABLE `functions_bk`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `permissions`
+-- AUTO_INCREMENT for table `customers_groups`
 --
-ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `customers_groups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `permission_user`
+-- AUTO_INCREMENT for table `group_prices`
 --
-ALTER TABLE `permission_user`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `group_prices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `roles`
+-- AUTO_INCREMENT for table `price`
 --
-ALTER TABLE `roles`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `price`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `prices_categories`
 --
-ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+ALTER TABLE `prices_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products_buyprice_details`
+--
+ALTER TABLE `products_buyprice_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products_categories`
+--
+ALTER TABLE `products_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products_prices`
+--
+ALTER TABLE `products_prices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_units`
+--
+ALTER TABLE `product_units`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `provider`
+--
+ALTER TABLE `provider`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `providers_groups`
+--
+ALTER TABLE `providers_groups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `stocks`
+--
+ALTER TABLE `stocks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `stock_diary`
+--
+ALTER TABLE `stock_diary`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `stock_diary_details`
+--
+ALTER TABLE `stock_diary_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `transaction`
+--
+ALTER TABLE `transaction`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `warehouse`
+--
+ALTER TABLE `warehouse`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `permissions`
+-- Constraints for table `customers`
 --
-ALTER TABLE `permissions`
-  ADD CONSTRAINT `permissions_ibfk_1` FOREIGN KEY (`function_id`) REFERENCES `functions_bk` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `permissions_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+ALTER TABLE `customers`
+  ADD CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`GROUP_ID`) REFERENCES `customers_groups` (`id`);
 
 --
--- Constraints for table `permission_user`
+-- Constraints for table `group_prices`
 --
-ALTER TABLE `permission_user`
-  ADD CONSTRAINT `permission_user_ibfk_1` FOREIGN KEY (`function_id`) REFERENCES `functions_bk` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `permission_user_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+ALTER TABLE `group_prices`
+  ADD CONSTRAINT `FK_group_prices_customers_groups` FOREIGN KEY (`GROUP_ID`) REFERENCES `customers_groups` (`id`),
+  ADD CONSTRAINT `group_prices_ibfk_1` FOREIGN KEY (`PRICE_ID`) REFERENCES `price` (`id`);
 
 --
--- Constraints for table `user_roles`
+-- Constraints for table `price`
 --
-ALTER TABLE `user_roles`
-  ADD CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+ALTER TABLE `price`
+  ADD CONSTRAINT `price_ibfk_1` FOREIGN KEY (`PRICE_CATEGORY_ID`) REFERENCES `prices_categories` (`id`);
+
+--
+-- Constraints for table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`PRODUCT_CATEGORY_ID`) REFERENCES `products_categories` (`id`),
+  ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`PRODUCT_UNIT_ID`) REFERENCES `product_units` (`id`);
+
+--
+-- Constraints for table `products_buyprice_details`
+--
+ALTER TABLE `products_buyprice_details`
+  ADD CONSTRAINT `products_buyprice_details_ibfk_1` FOREIGN KEY (`STOCK_DIARY_DETAILS_ID`) REFERENCES `stock_diary_details` (`id`),
+  ADD CONSTRAINT `products_buyprice_details_ibfk_2` FOREIGN KEY (`WAREHOUSES_ID`) REFERENCES `warehouse` (`id`),
+  ADD CONSTRAINT `products_buyprice_details_ibfk_3` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `products_prices`
+--
+ALTER TABLE `products_prices`
+  ADD CONSTRAINT `products_prices_ibfk_1` FOREIGN KEY (`PRICE_ID`) REFERENCES `price` (`id`),
+  ADD CONSTRAINT `products_prices_ibfk_2` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `provider`
+--
+ALTER TABLE `provider`
+  ADD CONSTRAINT `provider_ibfk_1` FOREIGN KEY (`PROVIDER_GROUP_ID`) REFERENCES `providers_groups` (`id`);
+
+--
+-- Constraints for table `stocks`
+--
+ALTER TABLE `stocks`
+  ADD CONSTRAINT `stock_to_product` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `stocks_ibfk_1` FOREIGN KEY (`WAREHOUSE_ID`) REFERENCES `warehouse` (`id`);
+
+--
+-- Constraints for table `stock_diary`
+--
+ALTER TABLE `stock_diary`
+  ADD CONSTRAINT `stock_diary_ibfk_1` FOREIGN KEY (`WAREHOUSE_ID`) REFERENCES `warehouse` (`id`);
+
+--
+-- Constraints for table `stock_diary_details`
+--
+ALTER TABLE `stock_diary_details`
+  ADD CONSTRAINT `stock_diary_details_ibfk_1` FOREIGN KEY (`STOCK_DIARY_ID`) REFERENCES `stock_diary` (`id`),
+  ADD CONSTRAINT `stock_diary_details_ibfk_2` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `transaction`
+--
+ALTER TABLE `transaction`
+  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`STOCK_DIARY_ID`) REFERENCES `stock_diary` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
