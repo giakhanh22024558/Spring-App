@@ -14,5 +14,6 @@ public class KeycloakProperties {
     private String clientSecret;
     private String adminUsername;
     private String adminPassword;
+    private String scope;
 }
 

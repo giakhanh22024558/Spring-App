@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 21, 2025 at 02:19 PM
+-- Generation Time: Mar 22, 2025 at 07:39 AM
 -- Server version: 5.6.51
 -- PHP Version: 8.2.20
 
@@ -108,17 +108,30 @@ CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `CREATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   `NAME` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `NAME_TEXT` text COLLATE utf8mb4_unicode_ci,
+  `name_text` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `UPDATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `PRODUCT_CATEGORY_ID` int(11) DEFAULT NULL,
   `PRODUCT_UNIT_ID` int(11) DEFAULT NULL,
-  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `PERCENT_DEFAULT_WHOLE_SELL` decimal(5,2) DEFAULT NULL,
   `PERCENT_DEFAULT_RETAIL_SELL` decimal(5,2) DEFAULT NULL,
   `MONEY_DEFAULT_WHOLE_SELL` decimal(10,2) DEFAULT NULL,
   `MONEY_DEFAULT_RETAIL_SELL` decimal(10,2) DEFAULT NULL,
-  `MIN_QUANTITY` int(11) DEFAULT NULL
+  `min_quantity` double DEFAULT NULL,
+  `convert_product_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `convert_quantity` double DEFAULT NULL,
+  `in_used` bit(1) DEFAULT NULL,
+  `is_deleted` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `CREATED_TIME`, `NAME`, `name_text`, `UPDATED_TIME`, `PRODUCT_CATEGORY_ID`, `PRODUCT_UNIT_ID`, `description`, `PERCENT_DEFAULT_WHOLE_SELL`, `PERCENT_DEFAULT_RETAIL_SELL`, `MONEY_DEFAULT_WHOLE_SELL`, `MONEY_DEFAULT_RETAIL_SELL`, `min_quantity`, `convert_product_code`, `convert_quantity`, `in_used`, `is_deleted`) VALUES
+(1, NULL, 'Product Name 2', 'Product Name Text 2', '2025-03-21 22:51:11', 10, 4, 'This is a sample product', NULL, NULL, NULL, NULL, 5, 'P002', 10.5, b'1', b'0'),
+(2, '2025-03-21 22:53:22', 'Product Name 3', 'Product Name Text 3', '2025-03-21 22:53:22', 10, 4, 'This is a sample product', NULL, NULL, NULL, NULL, 5, 'P003', 10.5, b'1', b'0'),
+(3, '2025-03-21 22:53:35', 'Product Name 1', 'Product Name Text 1', '2025-03-21 22:53:35', 10, 4, 'This is a sample product', NULL, NULL, NULL, NULL, 5, 'P001', 10.5, b'1', b'0');
 
 -- --------------------------------------------------------
 
@@ -149,9 +162,18 @@ CREATE TABLE `products_categories` (
   `id` int(11) NOT NULL,
   `CREATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   `NAME` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `BRANCH_ID` int(11) DEFAULT NULL,
-  `IS_DELETED` tinyint(1) DEFAULT NULL
+  `IS_DELETED` tinyint(1) DEFAULT NULL,
+  `in_used` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `products_categories`
+--
+
+INSERT INTO `products_categories` (`id`, `CREATED_TIME`, `NAME`, `IS_DELETED`, `in_used`) VALUES
+(10, '2025-03-21 22:17:41', 'Sample Category 2', NULL, b'1'),
+(11, '2025-03-21 22:17:44', 'Sample Category 3', NULL, b'1'),
+(12, '2025-03-21 22:24:17', 'Sample Category 1', NULL, b'1');
 
 -- --------------------------------------------------------
 
@@ -176,11 +198,19 @@ CREATE TABLE `products_prices` (
 CREATE TABLE `product_units` (
   `id` int(11) NOT NULL,
   `NAME` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `DESCRIPTION` text COLLATE utf8mb4_unicode_ci,
-  `BRANCH_ID` int(11) DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `CREATED_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   `IS_DELETED` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `product_units`
+--
+
+INSERT INTO `product_units` (`id`, `NAME`, `description`, `CREATED_TIME`, `IS_DELETED`) VALUES
+(2, 'Sample unit 2', NULL, '2025-03-21 22:30:13', NULL),
+(3, 'Sample unit 3', NULL, '2025-03-21 22:30:16', NULL),
+(4, 'Sample unit 1', NULL, '2025-03-21 22:33:32', NULL);
 
 -- --------------------------------------------------------
 
@@ -469,7 +499,7 @@ ALTER TABLE `prices_categories`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `products_buyprice_details`
@@ -481,7 +511,7 @@ ALTER TABLE `products_buyprice_details`
 -- AUTO_INCREMENT for table `products_categories`
 --
 ALTER TABLE `products_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `products_prices`
@@ -493,7 +523,7 @@ ALTER TABLE `products_prices`
 -- AUTO_INCREMENT for table `product_units`
 --
 ALTER TABLE `product_units`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `provider`

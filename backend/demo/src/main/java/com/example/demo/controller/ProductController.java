@@ -4,9 +4,12 @@ import com.example.demo.model.products.Product;
 import com.example.demo.model.products.ProductCategory;
 import com.example.demo.model.products.ProductUnit;
 import com.example.demo.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@SecurityRequirement(name = "keycloak")
 @RestController
 @RequestMapping("/store/api")
 public class ProductController {
@@ -19,7 +22,7 @@ public class ProductController {
 
     @GetMapping("/greeting")
     public ResponseEntity<?> greeting() {
-        return ResponseEntity.ok("Hello, this is from products");
+        return ResponseEntity.ok("Hello, this is from stores");
     }
 
     // ==========================
