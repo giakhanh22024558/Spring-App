@@ -7,16 +7,35 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_BACKEND: docker.io/${{ secrets.DOCKER_USERNAME }}/spring-boot-app
-  IMAGE_FRONTEND: docker.io/${{ secrets.DOCKER_USERNAME }}/vue-app
+  IMAGE_BACKEND: docker.io/khanhdev13/spring-boot-app
+  IMAGE_FRONTEND: docker.io/khanhdev13/vue-app
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: springdb
+  MYSQL_USER: user
+  MYSQL_PASSWORD: password
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ env.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ env.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ env.MYSQL_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=5
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+
+      - name: Wait for MySQL to be ready
+        run: sleep 30
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -24,17 +43,16 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Build and Test Backend
+      - name: Build Backend (Skip Tests)
         working-directory: backend/demo
-        run: |
-          mvn clean install -DskipTests
+        run: mvn clean install -DskipTests
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Build and Test Frontend
+      - name: Build Frontend
         working-directory: frontend
         run: |
           npm install
