@@ -7,8 +7,11 @@ WORKDIR /app
 # Copy the project files
 COPY . .
 
+# List files before running Maven to check if pom.xml exists
+RUN ls -R /app
+
 # Build the application
-RUN mvn -f backend/demo/pom.xml clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Use OpenJDK as the runtime image
 FROM openjdk:21-jdk-slim
