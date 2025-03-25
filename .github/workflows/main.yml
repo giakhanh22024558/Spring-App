@@ -71,17 +71,23 @@ jobs:
           docker build -t $IMAGE_FRONTEND:latest -f frontend/Dockerfile frontend/
           docker push $IMAGE_FRONTEND:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-push
+deploy:
+  runs-on: ubuntu-latest
+  needs: build-and-push
+  steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Update Kubernetes Manifests
+      run: |
+        sed -i "s|image: docker.io/khanhdev13/spring-boot-app:.*|image: docker.io/khanhdev13/spring-boot-app:${{ github.sha }}|g" k8s/backend.yaml
+        sed -i "s|image: docker.io/khanhdev13/vue-app:.*|image: docker.io/khanhdev13/vue-app:${{ github.sha }}|g" k8s/frontend.yaml
 
-      - name: Deploy with Docker Compose
-        run: |
-          docker compose down
-          docker pull $IMAGE_BACKEND:latest
-          docker pull $IMAGE_FRONTEND:latest
-          docker compose up -d
+    - name: Commit and Push Changes
+      run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "GitHub Actions"
+        git add k8s/
+        git commit -m "Update image tags to ${{ github.sha }}"
+        git push origin dev
+
