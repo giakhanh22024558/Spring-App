@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\Admin\kompose.exe convert
+    kompose.version: 1.30.0 (9d8dcb518)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: backend
+  name: backend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: backend
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\Admin\kompose.exe convert
+        kompose.version: 1.30.0 (9d8dcb518)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/spring-boot-vue-default: "true"
+        io.kompose.service: backend
+    spec:
+      containers:
+        - env:
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: password
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://db:3306/springdb
+            - name: SPRING_DATASOURCE_USERNAME
+              value: user
+          image: khanhdev13/spring-boot-vue-backend:latest
+          name: spring-backend
+          ports:
+            - containerPort: 9090
+              hostPort: 9090
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}

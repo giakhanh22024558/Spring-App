@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+spec:
+  project: default  # <-- Add this line
+  source:
+    repoURL: 'https://github.com/giakhanh22024558/k8s-config.git'
+    targetRevision: main
+    path: manifests  # Change to the correct folder in your repo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: my-app-namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
