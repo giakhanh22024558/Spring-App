@@ -63,7 +63,7 @@ jobs:
 
       - name: Build and Push Backend Docker Image
         run: |
-          docker build -t $IMAGE_BACKEND:latest -f backend/Dockerfile backend/
+          docker build -t $IMAGE_BACKEND:latest -f backend/demo/Dockerfile backend/
           docker push $IMAGE_BACKEND:latest
 
       - name: Build and Push Frontend Docker Image
