@@ -10,6 +10,9 @@ COPY . .
 # List files before running Maven to check if pom.xml exists
 RUN ls -R /app
 
+# Set the working directory inside the container
+WORKDIR /app/demo
+
 # Build the application
 RUN mvn clean package -DskipTests
 
