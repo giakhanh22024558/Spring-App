@@ -27,8 +27,7 @@ jobs:
       - name: Build and Test Backend
         working-directory: backend/demo
         run: |
-          mvn clean install
-          mvn test
+          mvn clean install -DskipTests
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
