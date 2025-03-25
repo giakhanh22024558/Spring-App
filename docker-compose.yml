@@ -1,36 +1,54 @@
+version: '3.8'
+
 services:
-  db:
-    image: mysql:8
-    container_name: mysql_db
+  mysql_keycloak:
+    image: mysql:8.0
+    container_name: mysql_keycloak
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: keycloak_db
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"  # Different port from app database
+    volumes:
+      - mysql_keycloak_data:/var/lib/mysql  # Persist Keycloak DB
+
+  mysql_app:
+    image: mysql:8.0
+    container_name: mysql_app
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: springdb
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+    ports:
+      - "3308:3306"
     volumes:
-      - ./springdb.sql:/docker-entrypoint-initdb.d/springdb.sql
-    ports:
-      - "3306:3306"
+      - mysql_app_data:/var/lib/mysql  # Persist App DB
+      - ./setup/springdb.sql:/docker-entrypoint-initdb.d/springdb.sql  # Initialize DB
 
-  backend:
-    build: ./backend/demo
-    container_name: spring_backend
-    depends_on:
-      - db
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    restart: always
+    command: start-dev --import-realm 
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/springdb
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://mysql_keycloak:3306/keycloak_db
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+    volumes:
+      - ./setup/SpringBootRealm-realm.json:/opt/keycloak/data/import/realm.json  # Load realm config
     ports:
-      - "9090:9090"
-    restart: always
-
-  frontend:
-    build: ./frontend
-    container_name: vue_frontend
+      - "8080:8080"
     depends_on:
-      - backend
-    ports:
-      - "8080:80"
-    restart: always
+      - mysql_keycloak
+
+volumes:
+  mysql_keycloak_data:  # Stores Keycloak database
+  mysql_app_data:       # Stores App database
