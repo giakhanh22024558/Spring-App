@@ -2,7 +2,7 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Set the working directory inside the container
-WORKDIR /app/demo
+WORKDIR /app
 
 # Copy the project files
 COPY . .
@@ -11,10 +11,10 @@ COPY . .
 # COPY setup/application.properties /app/demo/src/main/resources/application.properties
 
 # List files before running Maven to check if pom.xml exists
-RUN ls -R /app/demo
+RUN ls -R /app
 
-# Set the working directory inside the container
-WORKDIR /app/demo
+# # Set the working directory inside the container
+# WORKDIR /app
 
 # Build the application
 RUN mvn clean package -DskipTests
@@ -22,11 +22,11 @@ RUN mvn clean package -DskipTests
 # Use OpenJDK as the runtime image
 FROM openjdk:21-jdk-slim
 
-# Set the working directory
-WORKDIR /app
+# # Set the working directory
+# WORKDIR /app
 
 # Copy the built JAR file from the build stage
-COPY --from=build /app/demo/target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 # Expose the application's port
 EXPOSE 9090
