@@ -63,13 +63,13 @@ jobs:
 
       - name: Build and Push Backend Docker Image
         run: |
-          docker build -t $IMAGE_BACKEND:latest -f backend/demo/Dockerfile backend/
-          docker push $IMAGE_BACKEND:latest
+          docker build -t $IMAGE_BACKEND:${{ github.sha }} -f backend/demo/Dockerfile backend/
+          docker push $IMAGE_BACKEND:${{ github.sha }}
 
       - name: Build and Push Frontend Docker Image
         run: |
-          docker build -t $IMAGE_FRONTEND:latest -f frontend/Dockerfile frontend/
-          docker push $IMAGE_FRONTEND:latest
+          docker build -t $IMAGE_FRONTEND:${{ github.sha }} -f frontend/Dockerfile frontend/
+          docker push $IMAGE_FRONTEND:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -90,3 +90,12 @@ jobs:
           git add k8s/
           git commit -m "Update image tags to ${{ github.sha }}"
           git push origin dev
+
+      - name: Trigger ArgoCD Sync
+        run: |
+          curl -X POST "http://argocd-server.argocd.svc/api/v1/applications/my-app/sync" \
+          -H "Authorization: Bearer $ARGOCD_AUTH_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d '{}'
+        env:
+          ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
