@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-keycloak
+  template:
+    metadata:
+      labels:
+        app: mysql-keycloak
+    spec:
+      containers:
+        - name: mysql-keycloak
+          image: mysql:8.0
+          envFrom:
+            - configMapRef:
+                name: mysql-keycloak-config
+          ports:
+            - containerPort: 3306
+          args:
+            - "--default-authentication-plugin=mysql_native_password"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-keycloak-config
+data:
+  MYSQL_ROOT_PASSWORD: "root"
+  MYSQL_DATABASE: "keycloak_db"
+  MYSQL_USER: "keycloak"
+  MYSQL_PASSWORD: "password"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-keycloak
+spec:
+  selector:
+    app: mysql-keycloak
+  ports:
+    - protocol: TCP
+      port: 3307
+      targetPort: 3306

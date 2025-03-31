@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-app
+  template:
+    metadata:
+      labels:
+        app: mysql-app
+    spec:
+      containers:
+        - name: mysql-app
+          image: mysql:8.0
+          envFrom:
+            - configMapRef:
+                name: mysql-app-config
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+            - name: init-db
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: init-db
+          configMap:
+            name: mysql-init-db
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-app-config
+data:
+  MYSQL_ROOT_PASSWORD: "root"
+  MYSQL_DATABASE: "springdb"
+  MYSQL_USER: "user"
+  MYSQL_PASSWORD: "password"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-app
+spec:
+  selector:
+    app: mysql-app
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

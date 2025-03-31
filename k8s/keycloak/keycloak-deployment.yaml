@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:latest
+          command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--import-realm"]
+          envFrom:
+            - configMapRef:
+                name: keycloak-config
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: realm-config
+              mountPath: /opt/keycloak/data/import/realm.json
+              subPath: realm.json
+      volumes:
+        - name: realm-config
+          configMap:
+            name: keycloak-realm-config
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-config
+data:
+  KEYCLOAK_ADMIN: "admin"
+  KEYCLOAK_ADMIN_PASSWORD: "admin"
+  KC_DB: "mysql"
+  KC_DB_URL: "jdbc:mysql://mysql-keycloak:3307/keycloak_db"
+  KC_DB_USERNAME: "keycloak"
+  KC_DB_PASSWORD: "password"

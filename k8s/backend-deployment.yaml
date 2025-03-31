@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: docker.io/khanhdev13/spring-boot-app:latest
+          envFrom:
+            - configMapRef:
+                name: backend-config
+          ports:
+            - containerPort: 9090
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-app:3306/springdb"
+  SPRING_DATASOURCE_USERNAME: "user"
+  SPRING_DATASOURCE_PASSWORD: "password"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
