@@ -59,7 +59,7 @@ jobs:
           npm run build
 
       - name: Log in to Docker Hub
-        run: echo "dckr_pat_lsuDoN49VyjxZK2q-uyLw0OojXw" | docker login -u "khanhdev13" --password-stdin
+        run: echo "${{ secrets.DOCKER_SIGN_IN }}" | docker login -u "khanhdev13" --password-stdin
 
       - name: Build and Push Backend Docker Image
         run: |
@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: giakhanh22024558/k8s-config
-          token: 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 # Create a classic PAT or use a fine-grained token
+          token: ${{ secrets.GIT_SIGN_IN }} # Create a classic PAT or use a fine-grained token
           path: k8s-config
 
       - name: Update Kubernetes Manifests
