@@ -34,9 +34,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
+const route = useRoute()
 const router = useRouter()
 
 const form = ref({
@@ -44,16 +45,35 @@ const form = ref({
   category: '',
 })
 
+// Mock data source
+const products = [
+  { id: 1, name: 'Product A', category: 'Category 1' },
+  { id: 2, name: 'Product B', category: 'Category 2' },
+  { id: 3, name: 'Product C', category: 'Category 3' },
+]
+
 const formAction = ref('Add')
 
+onMounted(() => {
+  const id = parseInt(route.params.id)
+  if (!isNaN(id)) {
+    const product = products.find(p => p.id === id)
+    if (product) {
+      form.value.name = product.name
+      form.value.category = product.category
+      formAction.value = 'Update'
+    }
+  }
+})
+
 const handleSubmit = () => {
-  console.log('Form Submitted:', form.value)
-  // Your form submission logic here
+  console.log(`${formAction.value} product:`, form.value)
+  // Submit logic here
+  router.push('/products')
 }
 
 const cancelForm = () => {
-  console.log('Form Cancelled')
-  router.push('/products') // 👈 navigate to product list
+  router.push('/products')
 }
 </script>
 
