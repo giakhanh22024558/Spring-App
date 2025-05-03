@@ -11,12 +11,17 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Arrays;
+
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +39,8 @@ public class KeycloakSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
-                        oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+                        oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                .cors();
         return http.build();
     }
 
@@ -80,6 +86,18 @@ public class KeycloakSecurityConfig {
         }
 
         return Collections.emptyList(); // Return an empty list if roles are not found
+    }
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Frontend URL
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // Allowed methods
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Allowed headers
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
 }
