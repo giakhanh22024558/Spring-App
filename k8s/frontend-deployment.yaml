@@ -17,6 +17,14 @@ spec:
           image: docker.io/khanhdev13/vue-app:latest
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+
 ---
 apiVersion: v1
 kind: Service
