@@ -20,6 +20,13 @@ spec:
                 name: mysql-keycloak-config
           ports:
             - containerPort: 3306
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "250m"
           args:
             - "--default-authentication-plugin=mysql_native_password"
 
