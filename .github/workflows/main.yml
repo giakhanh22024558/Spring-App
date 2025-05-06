@@ -98,9 +98,10 @@ jobs:
 
       - name: Trigger ArgoCD Sync
         run: |
-          curl -X POST "http://localhost:8081/api/v1/applications/my-app/sync" \
+          curl -k POST "https://$ARGOCD_EXTERNAL_IP/api/v1/applications/my-app/sync" \
           -H "Authorization: Bearer $ARGOCD_AUTH_TOKEN" \
           -H "Content-Type: application/json" \
           -d '{}'
         env:
           ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+          ARGOCD_EXTERNAL_IP: ${{ secrets.ARGOCD_EXTERNAL_IP }}
