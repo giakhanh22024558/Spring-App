@@ -23,10 +23,10 @@ spec:
           resources:
             requests:
               memory: "512Mi"
-              cpu: "250m"
+              cpu: "100m"
             limits:
               memory: "1Gi"
-              cpu: "250m"
+              cpu: "100m"
           args:
             - "--default-authentication-plugin=mysql_native_password"
 
