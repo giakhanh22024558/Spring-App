@@ -21,6 +21,13 @@ spec:
                 name: keycloak-config
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "250m"
           volumeMounts:
             - name: realm-config
               mountPath: /opt/keycloak/data/import/realm.json
