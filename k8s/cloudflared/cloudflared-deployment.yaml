@@ -11,12 +11,6 @@ spec:
       labels:
         app: cloudflared
     spec:
-      dnsPolicy: "None"  # Use "None" to allow custom DNS configuration
-      dnsConfig:
-        nameservers:
-          - "kubernetes.default.svc.cluster.local"  # Internal Kubernetes DNS service
-        searches:
-          - "default.svc.cluster.local"  # Optional, for internal Kubernetes DNS search
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:latest
