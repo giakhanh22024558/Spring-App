@@ -52,19 +52,21 @@ spec:
       labels:
         app: cloudflared
     spec:
+      dnsPolicy: "None"  # Use "None" to allow custom DNS configuration
+      dnsConfig:
+        nameservers:
+          - "1.1.1.1"  # Cloudflare DNS
+          - "8.8.8.8"  # Google DNS
+        searches:
+          - "default.svc.cluster.local"  # Optional, for internal Kubernetes DNS search
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:latest
           args:
             - tunnel
-            - --no-autoupdate
             - run
             - --token
             - "$(TUNNEL_TOKEN)"
-            - --dns
-            - "1.1.1.1"
-            - --dns
-            - "8.8.8.8"
           env:
             - name: TUNNEL_TOKEN
               valueFrom:
