@@ -1,75 +1,174 @@
 <template>
   <div class="p-6 bg-white rounded shadow-md mx-auto">
-    <!-- Form -->
-    <a-form :model="form" @finish="handleSubmit" class="space-y-2" layout="vertical">
+    <a-form :model="form" :rules="rules" @finish="handleSubmit" layout="vertical">
+
+      <!-- Product Code (Generated automatically) -->
+      <a-form-item label="Product Code" name="convertProductCode">
+        <a-input v-model:value="form.convertProductCode" disabled placeholder="Product code" />
+      </a-form-item>
+
       <!-- Name -->
-      <a-form-item label="Name" name="name" class="!mb-4">
-        <a-input v-model:value="form.name" placeholder="Enter product name" class="w-full" />
+      <a-form-item label="Name" name="name">
+        <a-input v-model:value="form.name" placeholder="Enter product name" />
       </a-form-item>
 
       <!-- Category -->
-      <a-form-item label="Category" name="category" class="!mb-4">
-        <a-input
-          v-model:value="form.category"
-          placeholder="Enter product category"
-          class="w-full"
-        />
+      <a-form-item label="Category" name="productCategory">
+        <a-select v-model:value="form.productCategory" :options="categories.map(c => ({ label: c.name, value: c.id }))"
+          placeholder="Select category" />
+      </a-form-item>
+
+      <!-- Unit -->
+      <a-form-item label="Unit" name="productUnit">
+        <a-select v-model:value="form.productUnit" :options="units.map(u => ({ label: u.name, value: u.id }))"
+          placeholder="Select unit" />
+      </a-form-item>
+
+      <!-- Description -->
+      <a-form-item label="Description" name="description">
+        <a-input v-model:value="form.description" placeholder="Enter description" />
+      </a-form-item>
+
+      <!-- Quantity -->
+      <a-form-item label="Quantity" name="convertQuantity">
+        <a-input-number v-model:value="form.convertQuantity" :min="0" class="w-full" />
+      </a-form-item>
+
+      <!-- Min Quantity -->
+      <a-form-item label="Min Quantity" name="minQuantity">
+        <a-input-number v-model:value="form.minQuantity" :min="0" class="w-full" />
       </a-form-item>
 
       <!-- Buttons -->
       <div class="flex justify-end space-x-4 mt-6">
-        <a-button @click="cancelForm" class="bg-gray-300 text-gray-700 hover:bg-gray-400">
-          Cancel
-        </a-button>
-        <a-button
-          type="primary"
-          html-type="submit"
-          class="bg-blue-500 text-white hover:bg-blue-600"
-        >
-          {{ formAction }}
-        </a-button>
+        <a-button @click="cancelForm">Cancel</a-button>
+        <a-button html-type="submit">{{ formAction }}</a-button>
       </div>
     </a-form>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import axios from 'axios'
+import { message } from 'ant-design-vue'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-const route = useRoute()
 const router = useRouter()
-
-const form = ref({
-  name: '',
-  category: '',
-})
-
-// Mock data source
-const products = [
-  { id: 1, name: 'Product A', category: 'Category 1' },
-  { id: 2, name: 'Product B', category: 'Category 2' },
-  { id: 3, name: 'Product C', category: 'Category 3' },
-]
+const route = useRoute()
 
 const formAction = ref('Add')
 
-onMounted(() => {
+// Form model
+const form = reactive({
+  name: '',
+  description: '',
+  productCategory: null,
+  productUnit: null,
+  convertQuantity: 0,
+  minQuantity: 0,
+  convertProductCode: '', // Product code (auto-generated)
+})
+
+// Validation rules
+const rules = {
+  name: [{ required: true, message: 'Please enter product name' }],
+  productCategory: [{ required: true, message: 'Please select a category' }],
+  productUnit: [{ required: true, message: 'Please select a unit' }],
+}
+
+const categories = ref([])
+const units = ref([])
+
+const getAuthHeader = () => ({
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+  },
+})
+
+const fetchCategories = async () => {
+  const res = await axios.get(
+    `${API_BASE_URL}/store/api/products/categories`,
+    getAuthHeader()
+  )
+  categories.value = res.data
+}
+
+const fetchUnits = async () => {
+  const res = await axios.get(
+    `${API_BASE_URL}/store/api/products/units`,
+    getAuthHeader()
+  )
+  units.value = res.data
+}
+
+onMounted(async () => {
+  await Promise.all([fetchCategories(), fetchUnits()])
+
   const id = parseInt(route.params.id)
   if (!isNaN(id)) {
-    const product = products.find(p => p.id === id)
-    if (product) {
-      form.value.name = product.name
-      form.value.category = product.category
+    try {
+      // Fetch the product by ID from the backend
+      const res = await axios.get(`${API_BASE_URL}/store/api/products/${id}`, getAuthHeader())
+      const product = res.data
+
+      // Fill the form with product details
+      Object.assign(form, {
+        name: product.name,
+        description: product.description,
+        productCategory: product.productCategory.id,  // Assuming productCategory is an object
+        productUnit: product.productUnit.id,  // Assuming productUnit is an object
+        convertQuantity: product.convertQuantity,
+        minQuantity: product.minQuantity,
+        convertProductCode: product.convertProductCode, // Assuming product already has a code
+      })
+
       formAction.value = 'Update'
+    } catch (error) {
+      console.error('Failed to fetch product details', error)
+      message.error('Failed to fetch product details. Please try again.')
     }
   }
 })
 
-const handleSubmit = () => {
-  console.log(`${formAction.value} product:`, form.value)
-  // Submit logic here
-  router.push('/products')
+const handleSubmit = async () => {
+  try {
+
+    if (formAction.value === 'Add') {
+      const nextProductCode = `P${String(new Date().getTime()).slice(-3)}`  // Auto generate code like P001, P002, etc.
+      form.convertProductCode = nextProductCode
+    }
+
+    const selectedCategory = categories.value.find(c => c.id === form.productCategory)
+    const selectedUnit = units.value.find(u => u.id === form.productUnit)
+
+    const payload = {
+      ...form,
+      productCategory: selectedCategory,
+      productUnit: selectedUnit,
+    }
+
+    const token = localStorage.getItem('access_token')
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    if (formAction.value === 'Add') {
+      await axios.post(`${API_BASE_URL}/store/api/products`, payload, config)
+      message.success('Product added successfully!')
+    } else {
+      await axios.put(`${API_BASE_URL}/store/api/products/${route.params.id}`, payload, config)
+      message.success('Product updated successfully!')
+    }
+
+    router.push('/products')
+  } catch (error) {
+    console.error(error)
+    message.error('Failed to save product. Please try again.')
+  }
 }
 
 const cancelForm = () => {
@@ -77,6 +176,3 @@ const cancelForm = () => {
 }
 </script>
 
-<style scoped>
-/* You can add custom styles here if necessary */
-</style>
