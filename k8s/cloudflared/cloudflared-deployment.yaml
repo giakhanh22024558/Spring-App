@@ -28,3 +28,24 @@ spec:
           resources:
             limits:
               cpu: "100m"
+          volumeMounts:
+            - name: resolv-conf
+              mountPath: /etc/resolv.conf
+              subPath: resolv.conf
+      volumes:
+        - name: resolv-conf
+          configMap:
+            name: cloudflared-dns-config
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-dns-config
+  namespace: default
+data:
+  resolv.conf: |
+    nameserver 1.1.1.1          # Cloudflare external DNS
+    nameserver 8.8.8.8      
+    search default.svc.cluster.local svc.cluster.local cluster.local
+    options ndots:5
