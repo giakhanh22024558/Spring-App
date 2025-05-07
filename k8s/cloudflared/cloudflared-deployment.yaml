@@ -11,17 +11,6 @@ spec:
       labels:
         app: cloudflared
     spec:
-      dnsPolicy: None
-      dnsConfig:
-        nameservers:
-          - 34.118.224.10
-          - 1.1.1.1      
-          - 8.8.8.8
-        searches:
-          - default.svc.cluster.local
-          - svc.cluster.local
-          - cluster.local
-
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:latest
@@ -39,11 +28,3 @@ spec:
           resources:
             limits:
               cpu: "100m"
-          volumeMounts:
-            - name: resolv-conf
-              mountPath: /etc/resolv.conf
-              subPath: resolv.conf
-      volumes:
-        - name: resolv-conf
-          configMap:
-            name: cloudflared-dns-config
