@@ -37,3 +37,37 @@ spec:
     - protocol: TCP
       port: 7070
       targetPort: 80
+
+
+# --- CLOUDFLARED TUNNEL DEPLOYMENT ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+spec:
+  selector:
+    matchLabels:
+      app: cloudflared
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:latest
+          args:
+            - tunnel
+            - --no-autoupdate
+            - run
+            - --token
+            - "$(TUNNEL_TOKEN)"
+          env:
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflared-token
+                  key: tunnel-token
+          resources:
+            limits:
+              cpu: "100m"
