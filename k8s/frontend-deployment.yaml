@@ -39,7 +39,6 @@ spec:
       targetPort: 80
 
 
-# --- CLOUDFLARED TUNNEL DEPLOYMENT ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -62,6 +61,10 @@ spec:
             - run
             - --token
             - "$(TUNNEL_TOKEN)"
+            - --dns
+            - "1.1.1.1"
+            - --dns
+            - "8.8.8.8"
           env:
             - name: TUNNEL_TOKEN
               valueFrom:
