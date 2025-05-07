@@ -12,15 +12,6 @@ spec:
       labels:
         app: frontend
     spec:
-      dnsPolicy: None
-      dnsConfig:
-        nameservers:
-          - 8.8.8.8   # Google DNS
-          - 1.1.1.1   # Cloudflare DNS
-        searches:
-          - default.svc.cluster.local
-          - svc.cluster.local
-          - cluster.local
       containers:
         - name: frontend
           image: docker.io/khanhdev13/vue-app:latest
