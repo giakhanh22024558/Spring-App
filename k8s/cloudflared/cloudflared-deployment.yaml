@@ -11,6 +11,17 @@ spec:
       labels:
         app: cloudflared
     spec:
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 34.118.224.10
+          - 1.1.1.1      
+          - 8.8.8.8
+        searches:
+          - default.svc.cluster.local
+          - svc.cluster.local
+          - cluster.local
+
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:latest
@@ -36,16 +47,3 @@ spec:
         - name: resolv-conf
           configMap:
             name: cloudflared-dns-config
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: cloudflared-dns-config
-  namespace: default
-data:
-  resolv.conf: |
-    nameserver 1.1.1.1          # Cloudflare external DNS
-    nameserver 8.8.8.8      
-    search default.svc.cluster.local svc.cluster.local cluster.local
-    options ndots:5
