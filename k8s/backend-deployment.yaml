@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: docker.io/khanhdev13/spring-boot-app:9050a1721b47e147f420661e73769308802b0fda
+          image: docker.io/khanhdev13/spring-boot-app:c6ff6518d962546cb453b8f8b8525c704d5cf6ed
           envFrom:
             - configMapRef:
                 name: backend-config
