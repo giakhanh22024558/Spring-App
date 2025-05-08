@@ -78,14 +78,15 @@ jobs:
       - name: Checkout k8s-config Repository
         uses: actions/checkout@v3
         with:
-          repository: giakhanh22024558/k8s-config
+          repository: giakhanh22024558/Spring-App
+          ref: dev
           token: ${{ secrets.GIT_SIGN_IN }} # Create a classic PAT or use a fine-grained token
-          path: k8s-config
+          path: k8s
 
       - name: Update Kubernetes Manifests
         run: |
-          sed -i "s|image: docker.io/khanhdev13/spring-boot-app:.*|image: docker.io/khanhdev13/spring-boot-app:${{ github.sha }}|g" k8s-config/backend-deployment.yaml
-          sed -i "s|image: docker.io/khanhdev13/vue-app:.*|image: docker.io/khanhdev13/vue-app:${{ github.sha }}|g" k8s-config/frontend-deployment.yaml
+          sed -i "s|image: docker.io/khanhdev13/spring-boot-app:.*|image: docker.io/khanhdev13/spring-boot-app:${{ github.sha }}|g" k8s/backend-deployment.yaml
+          sed -i "s|image: docker.io/khanhdev13/vue-app:.*|image: docker.io/khanhdev13/vue-app:${{ github.sha }}|g" k8s/frontend-deployment.yaml
 
       - name: Commit and Push Changes to k8s-config
         run: |
