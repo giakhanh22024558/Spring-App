@@ -81,7 +81,6 @@ jobs:
           repository: giakhanh22024558/Spring-App
           ref: dev
           token: ${{ secrets.GIT_SIGN_IN }} # Create a classic PAT or use a fine-grained token
-          path: k8s
 
       - name: Update Kubernetes Manifests
         run: |
