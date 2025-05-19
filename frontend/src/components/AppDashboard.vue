@@ -1,29 +1,42 @@
 <template>
-  <div class="p-6 space-y-10">
-    <h2 class="text-2xl font-bold text-gray-800">Welcome to the Product Management Dashboard</h2>
+  <div class="p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+      Welcome to the Product Management Dashboard
+    </h2>
 
-    <!-- Products by Category -->
-    <div class="bg-white p-4 rounded shadow">
-      <h3 class="text-lg font-semibold mb-2">Products by Category</h3>
-      <Pie :data="categoryChartData" :options="basicOptions" />
-    </div>
+    <!-- Responsive Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Products by Category -->
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-semibold mb-2">Products by Category</h3>
+        <div class="w-full h-[300px]">
+          <Pie :data="categoryChartData" :options="basicOptions" />
+        </div>
+      </div>
 
-    <!-- Low Stock Products -->
-    <div class="bg-white p-4 rounded shadow">
-      <h3 class="text-lg font-semibold mb-2">Low Stock Products</h3>
-      <Bar :data="lowStockData" :options="basicOptions" />
-    </div>
+      <!-- Product Units -->
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-semibold mb-2">Product Quantity by Unit</h3>
+        <div class="w-full h-[300px]">
+          <Doughnut :data="unitData" :options="basicOptions" />
+        </div>
+      </div>
 
-    <!-- Monthly Product Additions -->
-    <div class="bg-white p-4 rounded shadow">
-      <h3 class="text-lg font-semibold mb-2">Monthly Product Additions</h3>
-      <Line :data="monthlyAdditionsData" :options="basicOptions" />
-    </div>
+      <!-- Low Stock Products -->
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-semibold mb-2">Low Stock Products</h3>
+        <div class="w-full h-[300px]">
+          <Bar :data="lowStockData" :options="basicOptions" />
+        </div>
+      </div>
 
-    <!-- Product Units -->
-    <div class="bg-white p-4 rounded shadow">
-      <h3 class="text-lg font-semibold mb-2">Product Quantity by Unit</h3>
-      <Doughnut :data="unitData" :options="basicOptions" />
+      <!-- Monthly Product Additions -->
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-semibold mb-2">Monthly Product Additions</h3>
+        <div class="w-full h-[300px]">
+          <Line :data="monthlyAdditionsData" :options="basicOptions" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
