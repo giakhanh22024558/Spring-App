@@ -40,7 +40,7 @@ public class KeycloakSecurityConfig {
                 )
                 .oauth2ResourceServer(
                         oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-                .cors();
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
     }
 
