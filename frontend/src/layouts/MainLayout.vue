@@ -50,6 +50,32 @@
                     Users
                 </RouterLink>
 
+                <!-- 🔽 Additional Menu Items -->
+                <RouterLink to="/orders" class="hover:text-green-400"
+                    :class="{ 'text-green-400 font-semibold': $route.path === '/orders' }">
+                    Orders
+                </RouterLink>
+
+                <RouterLink to="/suppliers" class="hover:text-green-400"
+                    :class="{ 'text-green-400 font-semibold': $route.path === '/suppliers' }">
+                    Suppliers
+                </RouterLink>
+
+                <RouterLink to="/inventory" class="hover:text-green-400"
+                    :class="{ 'text-green-400 font-semibold': $route.path === '/inventory' }">
+                    Inventory
+                </RouterLink>
+
+                <RouterLink to="/reports" class="hover:text-green-400"
+                    :class="{ 'text-green-400 font-semibold': $route.path === '/reports' }">
+                    Reports
+                </RouterLink>
+
+                <RouterLink to="/settings" class="hover:text-green-400"
+                    :class="{ 'text-green-400 font-semibold': $route.path === '/settings' }">
+                    Settings
+                </RouterLink>
+
             </nav>
         </aside>
 
