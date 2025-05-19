@@ -93,7 +93,7 @@ public class KeycloakSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Frontend URL
+        config.setAllowedOrigins(Arrays.asList("https://sickduck.me2uet.io.vn")); // Frontend URL
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // Allowed methods
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Allowed headers
         source.registerCorsConfiguration("/**", config);
